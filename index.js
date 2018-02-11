@@ -1,22 +1,33 @@
-const args = process.argv.slice(2);
+const packageInfo = require(`./package`);
+const commands = [
+  require(`./src/commands/version`),
+  require(`./src/commands/author`),
+  require(`./src/commands/license`),
+  require(`./src/commands/description`)
+];
 
-if (args.length === 0) {
-  console.log(`Кекстаграм - инстаграм для котиков
-Автор: Тимофей Б.`);
+const argv = process.argv.slice(2);
+
+if (argv.length === 0) {
+  console.log(`${packageInfo.name} - ${packageInfo.description}`);
   process.exit(0);
 }
 
-switch (args[0]) {
-  case `--version`:
-    console.log(`v0.0.1`);
-    break;
-  case `--help`:
-    console.log(`Доступные команды:
---help    — печатает доступные команды;
---version — печатает версию приложения;`);
-    break;
-  default:
-    console.error(`Неизвестная команда "${args[0]}".
-Для просмотра доступных команд используйте --help`);
-    process.exit(1);
+const firstArg = argv[0];
+
+if (firstArg === `--help`) {
+  console.log(`Available commands:`);
+  commands.forEach((command) => console.log(`${command.name}\t${command.description}`));
+  console.log(`\n--help\tShows help`);
+  process.exit(0);
+}
+
+const currentCommand = commands.find((command) => firstArg === command.name);
+
+if (!currentCommand) {
+  console.error(`Unrecognized command: "${firstArg}". Run "node index.js --help" for usage.`);
+  process.exit(1);
+} else {
+  currentCommand.execute();
+  process.exit(0);
 }
