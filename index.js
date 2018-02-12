@@ -1,4 +1,6 @@
 const packageInfo = require(`./package`);
+require(`colors`);
+
 const commands = [
   require(`./src/commands/version`),
   require(`./src/commands/author`),
@@ -17,8 +19,8 @@ const firstArg = argv[0];
 
 if (firstArg === `--help`) {
   console.log(`Available commands:`);
-  commands.forEach((command) => console.log(`${command.name}\t${command.description}`));
-  console.log(`\n--help\tShows help`);
+  commands.forEach((command) => console.log(`${command.name.gray}\t${command.description.green}`));
+  console.log(`\n${`--help`.gray}\t${`Shows help`.green}`);
   process.exit(0);
 }
 
